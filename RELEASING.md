@@ -10,9 +10,9 @@ Zenodo issues two kinds of DOI for a project:
 ## One-time setup
 
 1. Publish the repository on GitHub as a **public** repository. Zenodo cannot archive private repositories.
-2. Replace the `OWNER` placeholder with your GitHub username or organization in `CITATION.cff`, `README.md`, and `.zenodo.json` if present. For example:
+2. Replace the `ngupta1137` placeholder with your GitHub username or organization in `CITATION.cff`, `README.md`, and `.zenodo.json` if present. For example:
    ```bash
-   grep -rl OWNER . --include="*.md" --include="*.cff" --include="*.json" | xargs sed -i 's/OWNER/your-github-name/g'
+   grep -rl ngupta1137 . --include="*.md" --include="*.cff" --include="*.json" | xargs sed -i 's/ngupta1137/your-github-name/g'
    ```
 3. Create or sign in to a Zenodo account at zenodo.org using **Log in with GitHub**.
 4. In Zenodo, open your account menu, choose **GitHub**, and click **Sync now**. Find `agent-incident-atlas` and switch its toggle **on**. This must happen **before** you publish the release, or Zenodo will not archive it.

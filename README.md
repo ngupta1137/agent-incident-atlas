@@ -132,7 +132,7 @@ Each release is archived on Zenodo. Cite the concept DOI to refer to the project
   version = {0.1.0},
   year    = {2026},
   doi     = {10.5281/zenodo.XXXXXXX},
-  url     = {https://github.com/OWNER/agent-incident-atlas}
+  url     = {https://github.com/ngupta1137/agent-incident-atlas}
 }
 ```
 

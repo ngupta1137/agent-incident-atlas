@@ -23,6 +23,6 @@ keywords:
   - incident database
   - failure taxonomy
   - postmortem
-repository-code: "https://github.com/OWNER/agent-incident-atlas"
-url: "https://github.com/OWNER/agent-incident-atlas"
+repository-code: "https://github.com/ngupta1137/agent-incident-atlas"
+url: "https://github.com/ngupta1137/agent-incident-atlas"
 # doi: "10.5281/zenodo.XXXXXXX"   # add the Zenodo concept DOI after the first release, see RELEASING.md
