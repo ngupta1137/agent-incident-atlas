@@ -1,0 +1,23 @@
+{
+  "title": "Agent Incident Atlas",
+  "upload_type": "dataset",
+  "description": "<p>An open dataset and failure taxonomy for anonymized agentic AI incidents, organized for research and AI governance postmortems in enterprise AI. The taxonomy defines 14 governance failure types grouped under three questions: what a system is authorized to do, what evidence says it deserves that authority, and how that authority is revoked.</p><p>Version 0.1.0 contains 20 illustrative composite seed records, each marked <code>seed: true</code>. They are not real events. Community-contributed records will be added in later versions.</p><p>The dataset, schema, taxonomy, and documentation are licensed CC-BY-4.0. Code and notebook code are licensed MIT. See LICENSE-NOTE.md in the repository.</p>",
+  "creators": [
+    {"name": "Gupta, Nitin"}
+  ],
+  "version": "0.1.0",
+  "language": "eng",
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "keywords": [
+    "agentic AI",
+    "AI governance",
+    "enterprise AI",
+    "AI safety",
+    "incident database",
+    "failure taxonomy",
+    "postmortem",
+    "dataset"
+  ],
+  "notes": "Seed records in this version are illustrative composites. Code in the repository is MIT licensed; the dataset and documentation are CC-BY-4.0."
+}

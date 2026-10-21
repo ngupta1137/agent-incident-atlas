@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-015",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Outreach agent sends 14,000 incorrect financial aid messages in one batch",
+  "date": "2026-07",
+  "sector": "education",
+  "agent_type": "workflow-orchestration-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "irreversible-action-no-rollback",
+    "unevaluated-change-release"
+  ],
+  "primary_failure_type": "irreversible-action-no-rollback",
+  "narrative": "A university's financial aid office used an outreach agent to tell students about missing documents on their aid files. The agent wrote each message from the student's record and sent it through the campus portal and by text. For the first full rollout, the team connected the agent to the production record system using a field mapping built in a test environment. In the test data, the values for document status were inverted. About 14,000 students were told that required documents were missing when the office had received them. Some were told that their aid was at risk of cancellation. All of the messages went out in a single batch. Portal messages and texts cannot be recalled, and the system had no pause between batches, so a correction was sent only four hours later. The first send had no pilot group of a few hundred students and no sample of rendered messages for staff to read beforehand. Staff had checked that the agent could send. They had not checked what it would say. Phone lines in the aid office were saturated for two days, and staff spent the following week answering questions and confirming records student by student.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "customer",
+      "reputational",
+      "operational"
+    ],
+    "description": "About 14,000 students received incorrect aid status messages. Support lines were saturated for two days."
+  },
+  "root_cause": "A field mapping from a test environment reached production unverified, and the system sent all messages in one irreversible batch.",
+  "governance_gap": {
+    "control_category": "containment",
+    "missing_control": "Staged release with a pilot batch, a rendered sample for human review, and a pause between batches",
+    "description": "The rollout plan treated sending as a single step and had no stage in which a person read the messages before they reached students."
+  },
+  "detection": {
+    "method": "user-complaint",
+    "time_to_detect": "hours"
+  },
+  "lessons_learned": [
+    "Release bulk outbound messages in stages, starting with a small group that staff can verify.",
+    "Have a person read a random sample of rendered messages before every full send.",
+    "Verify configuration against production data, not only against test data."
+  ]
+}

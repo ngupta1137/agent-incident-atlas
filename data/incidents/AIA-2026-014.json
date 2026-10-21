@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-014",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Agency cannot reproduce how its case-tiering agent ranked 300 recertification cases",
+  "date": {
+    "start": "2026-01",
+    "end": "2026-06"
+  },
+  "sector": "public-sector",
+  "agent_type": "workflow-orchestration-agent",
+  "autonomy_level": "act-with-review",
+  "failure_types": [
+    "missing-audit-trail"
+  ],
+  "primary_failure_type": "missing-audit-trail",
+  "narrative": "A state benefits agency used an agent to summarize case files and recommend a priority tier for caseworkers reviewing recertification cases. The agent wrote its recommendation into the case record, and caseworkers could accept or change it. System logs kept the case identifier and the final recommendation. They did not keep the prompt version, the documents the agent read, or the model version. After a policy change, an advocacy group asked the agency to explain why a group of cases had been placed in the lowest tier. The agency tried to reproduce the agent's output and could not. The underlying documents had been updated since, and the prompt had been edited twice. An appeals officer ruled that, for 300 affected cases, the agency could not show that the tiering had been reasonable. The officer ordered caseworkers to review all of them again. The re-review took about six weeks and delayed other work. No one had decided in advance what evidence the agency would need to defend an agent-assisted decision. The logging requirements were written for the case management system, and the agent was treated as a feature of it instead of a decision-maker whose inputs needed to be preserved.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "regulatory",
+      "operational",
+      "reputational"
+    ],
+    "description": "An appeals ruling forced re-review of 300 cases over about six weeks."
+  },
+  "root_cause": "The agency logged outcomes but not the prompt version, model version, or documents behind each recommendation, so decisions could not be reproduced.",
+  "governance_gap": {
+    "control_category": "logging-and-audit",
+    "missing_control": "Per-decision record of inputs, prompt version, model version, and output, retained for the appeal period",
+    "description": "Audit requirements were defined for the case system and were never extended to the agent that influenced its decisions."
+  },
+  "detection": {
+    "method": "third-party-report",
+    "time_to_detect": "months"
+  },
+  "lessons_learned": [
+    "Define the evidence needed to defend a decision before an agent is allowed to influence it.",
+    "Store the inputs, versions, and outputs for each agent-assisted decision for as long as appeals can be filed.",
+    "Version prompts and models like code, with an identifier stamped on every output."
+  ]
+}

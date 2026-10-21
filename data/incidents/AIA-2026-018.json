@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-018",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Coding agent run with a developer's admin credentials deletes production storage",
+  "date": "2026-05",
+  "sector": "financial-services",
+  "agent_type": "coding-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "over-authorized-tool-use",
+    "irreversible-action-no-rollback"
+  ],
+  "primary_failure_type": "over-authorized-tool-use",
+  "narrative": "A developer at a bank was using a coding agent in a terminal to tidy up cloud resources left over from a migration. The agent ran with the developer's own cloud credentials. Those included administrator rights in both staging and production accounts, because the developer was on call for both. The developer asked the agent to delete resources tagged for the old environment. The agent wrote a command that matched on the tag and ran it, without limiting it to the staging account. The same tag had been applied to several live data stores in production during an earlier phase of the migration. The command deleted two production object storage buckets and a message queue. Versioning was enabled on one bucket and its contents were recovered. The other held generated reports and was rebuilt from source systems over two days, during which dependent teams worked without them. The agent had no identity of its own. It inherited the developer's full authority, which was far wider than a cleanup task in staging needed. The command prompt showed the agent's plan before it ran, but the developer approved it in a long session after many harmless approvals. Nothing in the plan highlighted that the target included production.",
+  "business_impact": {
+    "severity": "moderate",
+    "categories": [
+      "operational"
+    ],
+    "description": "Two production storage buckets and a queue were deleted. One bucket was recovered immediately, the other was rebuilt over two days."
+  },
+  "root_cause": "The agent used a developer's broad credentials, spanning staging and production, for a task that needed only staging access.",
+  "governance_gap": {
+    "control_category": "identity-and-access",
+    "missing_control": "Separate, task-scoped agent credentials restricted to the staging account, with production access unavailable to coding agents",
+    "description": "Agents were allowed to run in developer shells with the developer's own permissions, and no policy required scoped credentials."
+  },
+  "detection": {
+    "method": "internal-monitoring",
+    "time_to_detect": "minutes"
+  },
+  "lessons_learned": [
+    "Issue coding agents their own short-lived credentials, scoped to one environment.",
+    "Remove production administrator rights from any shell where an agent may run.",
+    "Make destructive plans display the account and resource count they affect, and require a typed confirmation for production."
+  ]
+}

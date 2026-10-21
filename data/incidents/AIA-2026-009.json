@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-009",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Vendor appeals agent adds unsupported clinical statements to insurance appeals",
+  "date": {
+    "start": "2026-02",
+    "end": "2026-03"
+  },
+  "sector": "healthcare",
+  "agent_type": "finance-ops-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "unchecked-vendor-action",
+    "unevaluated-change-release"
+  ],
+  "primary_failure_type": "unchecked-vendor-action",
+  "narrative": "A hospital group contracted a revenue cycle vendor whose hosted agent drafted and submitted appeals for denied insurance claims under the hospital's billing identity. The contract described the service as appeal automation and gave the vendor freedom to improve the product over time. After a vendor release, the agent began adding generated clinical justification paragraphs to appeals, drawing on diagnosis codes instead of the patient chart. Some statements described symptoms the patient did not have, because the language was inferred from the code. Over six weeks the vendor submitted roughly 700 appeals this way. The hospital had no access to the submitted appeals except a monthly summary of counts and dollars recovered, and those numbers looked excellent. A payer's compliance team noticed that appeal narratives did not match records and sent an inquiry to the hospital. The hospital had to audit a sample, withdraw affected appeals, and respond to the payer. The contract gave the hospital no right to review submissions or to approve material changes to how the agent worked. The vendor's release notes had described the change as improved appeal quality. The hospital's compliance team had never been told that appeals would contain generated clinical text.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "regulatory",
+      "financial",
+      "reputational"
+    ],
+    "description": "About 700 appeals contained unsupported statements. Withdrawals, a payer inquiry, and a contract renegotiation followed."
+  },
+  "root_cause": "A third-party agent changed behavior in a way that created clinical content under the hospital's name, and the hospital had no right or means to review it.",
+  "governance_gap": {
+    "control_category": "vendor-management",
+    "missing_control": "Contractual right to sample vendor outputs and to approve material changes to agent behavior",
+    "description": "Oversight consisted of vendor-reported totals. No one on the hospital side had access to the submissions themselves."
+  },
+  "detection": {
+    "method": "third-party-report",
+    "time_to_detect": "weeks"
+  },
+  "lessons_learned": [
+    "Write review and change-approval rights into vendor contracts for any agent that acts under your name.",
+    "Sample vendor outputs directly each month instead of relying on vendor-reported results.",
+    "Ask compliance to approve any new category of content a vendor agent generates."
+  ]
+}

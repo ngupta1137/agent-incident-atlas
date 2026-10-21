@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-003",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Scheduled expense agent keeps approving after its owner changes roles",
+  "date": {
+    "start": "2025-04",
+    "end": "2025-06"
+  },
+  "sector": "professional-services",
+  "agent_type": "workflow-orchestration-agent",
+  "autonomy_level": "act-with-review",
+  "failure_types": [
+    "unrevoked-access-after-role-change"
+  ],
+  "primary_failure_type": "unrevoked-access-after-role-change",
+  "narrative": "A consulting firm built a scheduled agent for its regional finance manager. Each Friday it reviewed expense exceptions and approved those under a set threshold, using the manager's delegated approval rights. The manager later moved to a business development role in another region. HR processed the transfer and the expense platform removed the manager's approval role. The agent, however, authenticated with a delegated token issued two months earlier, and that token was tied to a delegation record, not to the manager's live role. The delegation record belonged to the agent platform team, who received no feed of HR events. For eleven weeks the agent kept approving exceptions for a region the former manager no longer oversaw. An internal audit sample found 63 approvals with no current approver of record. Most were routine. Eight broke policy, such as duplicate meals and personal travel, and a new regional manager would have rejected them. The firm's offboarding and transfer checklist covered people, laptops, and application roles. It said nothing about agents, schedules, or delegations created by the person who was leaving. Because the approvals were valid on their face, no alert fired.",
+  "business_impact": {
+    "severity": "moderate",
+    "categories": [
+      "financial",
+      "regulatory"
+    ],
+    "description": "63 approvals made without a valid approver, eight of them policy violations worth low five figures in total, and an internal audit finding."
+  },
+  "root_cause": "Agent delegations were not part of the identity lifecycle, so a role change removed the human's access but left the agent's.",
+  "governance_gap": {
+    "control_category": "identity-and-access",
+    "missing_control": "Automatic expiry and recertification of agent delegations on transfer or departure of the delegating person",
+    "description": "The delegation record had an owner who received no role-change events, and the transfer checklist did not list agents."
+  },
+  "detection": {
+    "method": "audit-review",
+    "time_to_detect": "weeks"
+  },
+  "lessons_learned": [
+    "Treat agent delegations as identities with owners and expiry dates, and connect them to HR transfer and exit events.",
+    "Require quarterly recertification of every standing agent permission by the current business owner.",
+    "Add agents and scheduled jobs to the transfer and offboarding checklist."
+  ]
+}

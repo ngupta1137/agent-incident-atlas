@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-007",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Replenishment agent orders packaging for nine days from a frozen inventory snapshot",
+  "date": {
+    "start": "2025-11",
+    "end": "2025-11"
+  },
+  "sector": "logistics",
+  "agent_type": "procurement-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "stale-data-action",
+    "missing-stop-criteria"
+  ],
+  "primary_failure_type": "stale-data-action",
+  "narrative": "A third-party logistics company used a replenishment agent to place purchase orders for packaging materials when projected stock at a warehouse fell below a reorder point. The agent read inventory positions from a nightly snapshot table. After a database migration, the job that refreshed the snapshot failed without raising an alert, and the table kept the figures from the day before a large inbound delivery arrived. At those figures, stock looked low. Each morning the agent computed a shortfall, found it below the reorder point, and placed another order. It did this for nine days. It did not compare new orders with open orders, so nothing told it that it had already ordered the same quantity repeatedly. The supplier contract allowed cancellation only within 72 hours, and most orders had shipped before anyone looked. By the time a warehouse supervisor noticed pallets stacking in the aisles, the company had received about three times the quantity it needed. It paid for overflow storage and spent two weeks negotiating returns. The agent had no check on how old its inputs were, and no rule to stop or ask for review after repeating an identical action.",
+  "business_impact": {
+    "severity": "moderate",
+    "categories": [
+      "financial",
+      "operational"
+    ],
+    "description": "Roughly three times the needed packaging stock was delivered, with overflow storage costs and weeks of supplier negotiation."
+  },
+  "root_cause": "The inventory snapshot stopped refreshing without an alert, and the agent neither checked data age nor compared new orders with open orders.",
+  "governance_gap": {
+    "control_category": "data-quality",
+    "missing_control": "Freshness check on source data before any order is placed, with the agent blocked when data is older than a set limit",
+    "description": "The pipeline owner and the agent owner were different teams, and neither defined a data age limit for the agent's inputs."
+  },
+  "detection": {
+    "method": "employee-report",
+    "time_to_detect": "days"
+  },
+  "lessons_learned": [
+    "Make the agent check the timestamp of its inputs and refuse to act on data past a stated age.",
+    "Compare each proposed order with open orders and cap repeat orders for the same item.",
+    "Alert on failed refresh jobs, and give pipeline owners a list of agent consumers to warn."
+  ]
+}

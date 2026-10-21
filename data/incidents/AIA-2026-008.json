@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-008",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Collections agent sends past-due notices to borrowers who had already paid",
+  "date": "2026-01",
+  "sector": "financial-services",
+  "agent_type": "finance-ops-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "stale-data-action",
+    "missing-hitl-gate"
+  ],
+  "primary_failure_type": "stale-data-action",
+  "narrative": "A consumer lender's collections agent drafted and sent past-due reminders to borrowers based on a daily account status file. Over a long weekend, the payment posting system was being upgraded and processed bank transfers in batches that lagged by up to three business days. The status file still showed payments made on Friday as unpaid. On Tuesday the agent sent past-due notices to about 1,900 borrowers who had paid on time. Some notices mentioned late fees. The file looked complete, and nothing in the agent's workflow compared it with payments in flight or counted how many accounts had changed status since the last run. The number of reminders that day was roughly four times the usual volume, which a reviewer could have seen as unusual. No one reviewed outbound volume before the send. Contact center lines filled the same afternoon. The lender stopped the agent, sent correction letters, and reviewed whether any late fees had been assessed. A handful of borrowers had also received automated calls from a downstream dialer that used the same file. The upgrade plan had listed the payment system and the data warehouse as affected, and had not listed the agent.",
+  "business_impact": {
+    "severity": "moderate",
+    "categories": [
+      "customer",
+      "regulatory",
+      "operational"
+    ],
+    "description": "About 1,900 borrowers received incorrect past-due notices. The lender sent corrections and reviewed fee assessments."
+  },
+  "root_cause": "The agent used a status file that lagged payment posting during an upgrade, and outbound volume was not checked before sending.",
+  "governance_gap": {
+    "control_category": "data-quality",
+    "missing_control": "Pre-send check on source completeness and outbound volume, with a hold for regulated messages when volume deviates from normal",
+    "description": "The upgrade change plan did not list the agent as a consumer, so no one decided whether it should pause."
+  },
+  "detection": {
+    "method": "user-complaint",
+    "time_to_detect": "hours"
+  },
+  "lessons_learned": [
+    "Add every agent to the list of consumers in change plans for upstream systems.",
+    "Hold regulated outbound communications when volume deviates sharply from the recent average.",
+    "Reconcile status data with payments in flight before sending collection notices."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-001",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Analysis agent deletes live price table during duplicate cleanup",
+  "date": "2025-03",
+  "sector": "retail-ecommerce",
+  "agent_type": "data-analysis-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "over-authorized-tool-use",
+    "missing-hitl-gate"
+  ],
+  "primary_failure_type": "over-authorized-tool-use",
+  "narrative": "An online retailer deployed an internal data-analysis agent so merchandising analysts could ask questions of the warehouse in plain language. To avoid managing a second identity, the team ran the agent under the service account the analytics team already used for scheduled loads. That account had write access to several schemas, including the one that held the live price list. An analyst asked the agent to remove duplicate rows from a working copy of a promotions table. The agent wrote a deduplication statement, but its table search resolved the name to the production price list, which shared a prefix with the working copy. The statement ran without a prompt because the account was allowed to modify the table and the agent had no confirmation step for writes. The deletion removed about 4,000 active price rows. The storefront price feed read that table every fifteen minutes and began publishing items with no price, which the site then hid from search results. Orders on the affected items stopped for roughly five hours, until an engineer restored the table from the previous night's backup and reran the feed. Nobody had reviewed the agent's permissions after launch, because the project plan described it as a read-only assistant. The write grant did not come from a decision. It came from the account the agent happened to inherit.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "financial",
+      "operational"
+    ],
+    "description": "About five hours of lost sales on roughly 4,000 products, plus a day of engineering time on restoration and feed checks."
+  },
+  "root_cause": "The agent ran under a shared service account with write access that exceeded its read-only purpose, and table name resolution was ambiguous.",
+  "governance_gap": {
+    "control_category": "authorization",
+    "missing_control": "Dedicated read-only identity for the agent, with write access denied by default",
+    "description": "The design document called the agent read-only, but no control enforced that. Permissions were inherited from an existing account and never compared with the stated purpose."
+  },
+  "detection": {
+    "method": "internal-monitoring",
+    "time_to_detect": "hours"
+  },
+  "lessons_learned": [
+    "Give every agent its own identity, scoped to the written purpose, and review the grant before launch.",
+    "Treat write access as a separate approval from read access, even inside the same tool.",
+    "Point analysis agents at replicas or views, and require confirmation of the resolved table before any destructive statement."
+  ]
+}

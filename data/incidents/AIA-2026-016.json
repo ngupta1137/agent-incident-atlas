@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-016",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Support agent promises a 90 day return window for nine hours before it can be switched off",
+  "date": "2026-06",
+  "sector": "retail-ecommerce",
+  "agent_type": "support-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "missing-kill-switch",
+    "unevaluated-change-release"
+  ],
+  "primary_failure_type": "missing-kill-switch",
+  "narrative": "An online retailer's customer-facing support agent answered returns questions from a knowledge base. A policy editor changed the return window article for one product category from 30 days to 90 days by mistake. Knowledge base edits went live immediately and had no second reviewer. The agent began telling customers they had 90 days. Within an hour, support staff reading chat transcripts noticed the pattern and raised it with the engineering team. The problem then moved from detection to containment. The agent had no pause switch that operations staff could use. Turning it off required an engineering change to remove it from the chat widget routing, and because the system was classified as customer-facing production, the change needed approval from the change board. The board met on a fixed schedule and the on-call approver was unavailable. It took nine hours to disable the agent. During that window it gave the wrong policy to about 2,600 customers. The retailer decided to honor the longer window for those customers instead of arguing about chat transcripts. The knowledge base was corrected in minutes once someone with edit rights was found. The agent was the part that could not be stopped.",
+  "business_impact": {
+    "severity": "moderate",
+    "categories": [
+      "financial",
+      "customer"
+    ],
+    "description": "About 2,600 customers were given the wrong return policy. The retailer honored it, which cost low five figures in returns."
+  },
+  "root_cause": "A single unreviewed content edit changed the agent's answers, and no operational control let staff pause the agent quickly.",
+  "governance_gap": {
+    "control_category": "containment",
+    "missing_control": "Pause switch owned by customer operations that disables the agent without a code change or change-board approval",
+    "description": "Disabling the agent was classified as a production change. No one had designed a fast path for stopping it in an emergency."
+  },
+  "detection": {
+    "method": "employee-report",
+    "time_to_detect": "hours"
+  },
+  "lessons_learned": [
+    "Give the business owner of any customer-facing agent a one-step pause that falls back to human support.",
+    "Pre-approve the emergency stop path in change policy so it does not wait for a board.",
+    "Require a second reviewer for edits to content the agent treats as policy."
+  ]
+}

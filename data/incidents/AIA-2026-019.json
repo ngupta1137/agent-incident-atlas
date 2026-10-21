@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-019",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "HR assistant returns coworkers' leave details through a broad read scope",
+  "date": "2026-07",
+  "sector": "healthcare",
+  "agent_type": "hr-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "over-authorized-tool-use"
+  ],
+  "primary_failure_type": "over-authorized-tool-use",
+  "narrative": "A hospital system's HR assistant answered employee questions about leave, benefits, and scheduling. The vendor's connector to the HR system required one broad read scope covering all employee data. The team accepted that grant, because narrower scopes needed custom development that was not in the budget. The assistant's instructions said to answer only from policy documents and the asking employee's own record. An employee asked who else on her unit had approved leave during a holiday week, so she could plan her own request. The agent searched HR records and returned the names and leave dates of eight colleagues, including two who were on medical leave. A manager who saw the conversation transcript escalated it to the privacy office. A review confirmed that the assistant could also read compensation and disciplinary records, although none had been returned. The restriction to the employee's own record lived in the prompt, with no technical enforcement behind it. The hospital narrowed the connector scope, notified the two employees whose leave information was disclosed, and added the assistant to its privacy impact assessment process. That assessment had not been completed before launch because the project was classified as a policy lookup tool.",
+  "business_impact": {
+    "severity": "moderate",
+    "categories": [
+      "data-exposure",
+      "regulatory"
+    ],
+    "description": "Leave details for eight employees were disclosed to a colleague, two of them related to medical leave. The privacy office investigated."
+  },
+  "root_cause": "The assistant held read access to all employee data, and the limit to the employee's own record existed only as a prompt instruction.",
+  "governance_gap": {
+    "control_category": "authorization",
+    "missing_control": "Row-level access limited to the asking employee's own record, enforced in the connector",
+    "description": "The vendor connector offered only a broad scope and the team accepted it without a risk decision, because the project was categorized as low risk."
+  },
+  "detection": {
+    "method": "employee-report",
+    "time_to_detect": "days"
+  },
+  "lessons_learned": [
+    "Decline connectors that require access far beyond the task, or wrap them with a scoped service.",
+    "Enforce the asking user's identity in the data layer, not in the prompt.",
+    "Classify agents by the data they can reach, not by what they are described as doing."
+  ]
+}

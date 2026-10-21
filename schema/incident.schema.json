@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Incident Atlas incident record",
+  "description": "One anonymized record of an agentic AI failure in a production or pilot enterprise setting. Version 0.1.0. See schema/FIELDS.md for guidance on filling each field.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "id", "seed", "provenance", "title", "date", "sector", "agent_type",
+    "autonomy_level", "failure_types", "primary_failure_type", "narrative", "business_impact",
+    "root_cause", "governance_gap", "detection", "lessons_learned"
+  ],
+  "$defs": {
+    "partialDate": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?$",
+      "description": "YYYY-MM or YYYY-MM-DD. Prefer month precision to reduce re-identification risk."
+    },
+    "failureTag": {
+      "type": "string",
+      "enum": [
+        "over-authorized-tool-use",
+        "missing-hitl-gate",
+        "unrevoked-access-after-role-change",
+        "prompt-injection-scope-escape",
+        "stale-data-action",
+        "unchecked-vendor-action",
+        "missing-stop-criteria",
+        "cost-latency-blowout",
+        "unvalidated-output-propagation",
+        "cross-context-data-leakage",
+        "missing-audit-trail",
+        "irreversible-action-no-rollback",
+        "missing-kill-switch",
+        "unevaluated-change-release"
+      ]
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1.0",
+      "description": "Version of this schema the record conforms to."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^AIA-[0-9]{4}-[0-9]{3}$",
+      "description": "Unique identifier, AIA-<year added>-<three digit sequence>. Also the file name (AIA-2026-001.json)."
+    },
+    "seed": {
+      "type": "boolean",
+      "description": "True only for illustrative composite records written by the maintainers. Community submissions must be false."
+    },
+    "provenance": {
+      "type": "string",
+      "enum": [
+        "composite-illustration",
+        "first-hand-participant",
+        "public-reporting-reconstruction",
+        "contributor-composite"
+      ],
+      "description": "Where the record comes from. composite-illustration is reserved for seed records and is not a real event. first-hand-participant means the contributor was involved. public-reporting-reconstruction means rebuilt from published sources. contributor-composite means several real events merged to prevent identification."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 120,
+      "description": "Plain statement of what happened. No company, product, or person names."
+    },
+    "date": {
+      "description": "When the incident occurred. A single partial date, or an object with start and end for incidents that ran over a period.",
+      "oneOf": [
+        {"$ref": "#/$defs/partialDate"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start", "end"],
+          "properties": {
+            "start": {"$ref": "#/$defs/partialDate", "description": "First date the failure was active."},
+            "end": {"$ref": "#/$defs/partialDate", "description": "Date the failure was contained."}
+          }
+        }
+      ]
+    },
+    "sector": {
+      "type": "string",
+      "enum": [
+        "retail-ecommerce", "consumer-goods", "financial-services", "healthcare", "insurance",
+        "manufacturing", "logistics", "telecom", "energy-utilities", "public-sector",
+        "technology", "professional-services", "education", "other"
+      ],
+      "description": "Sector of the organization that deployed the agent. Use a coarse sector, never a sub-niche that identifies the organization."
+    },
+    "agent_type": {
+      "type": "string",
+      "enum": [
+        "support-agent", "coding-agent", "data-analysis-agent", "finance-ops-agent",
+        "procurement-agent", "it-operations-agent", "hr-agent", "research-agent",
+        "document-processing-agent", "workflow-orchestration-agent", "sales-ops-agent", "other"
+      ],
+      "description": "The job the agent was doing when it failed, not the model or framework behind it."
+    },
+    "autonomy_level": {
+      "type": "string",
+      "enum": ["recommend-only", "act-with-approval", "act-with-review", "act-autonomously"],
+      "description": "How much authority the agent had in the failing workflow. recommend-only: a person did every action. act-with-approval: the agent acted after a person approved each action. act-with-review: the agent acted and a person reviewed afterward. act-autonomously: the agent acted with no routine human review."
+    },
+    "failure_types": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/failureTag"},
+      "description": "One to three tags from taxonomy.md. Must include primary_failure_type."
+    },
+    "primary_failure_type": {
+      "$ref": "#/$defs/failureTag",
+      "description": "The tag whose missing control, if present and working, would have prevented the harm. Use the tie-break rule in taxonomy.md. Must also appear in failure_types."
+    },
+    "narrative": {
+      "type": "string",
+      "minLength": 700,
+      "maxLength": 2600,
+      "description": "Anonymized account of what happened, 150 to 300 words (checked by scripts/validate.py). Sequence of events, no blame, no names, no identifying system details."
+    },
+    "business_impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "categories", "description"],
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["low", "moderate", "high", "critical"],
+          "description": "low: contained internally, little cost. moderate: noticeable cost or customer effect, recovered within days. high: material financial, regulatory, or customer harm. critical: safety harm, large regulatory consequence, or loss that threatens the business unit."
+        },
+        "categories": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["financial", "operational", "regulatory", "customer", "reputational", "data-exposure", "safety"]
+          },
+          "description": "Kinds of impact that occurred."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 500,
+          "description": "What the impact was, using ranges or aggregate numbers rather than exact figures."
+        }
+      }
+    },
+    "root_cause": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 600,
+      "description": "The condition that made the failure possible. State the system or process cause, not a model quality complaint and not a person."
+    },
+    "governance_gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["control_category", "missing_control", "description"],
+      "properties": {
+        "control_category": {
+          "type": "string",
+          "enum": [
+            "authorization", "approval", "identity-and-access", "data-quality", "vendor-management",
+            "monitoring", "change-management", "budgeting-and-limits", "logging-and-audit",
+            "containment", "evaluation-and-testing"
+          ],
+          "description": "Family the missing control belongs to."
+        },
+        "missing_control": {
+          "type": "string",
+          "minLength": 15,
+          "maxLength": 200,
+          "description": "The specific control that did not exist or did not operate, phrased as a control someone could implement."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 500,
+          "description": "Why the control was absent: not designed, designed but not built, built but bypassed, or built but not owned."
+        }
+      }
+    },
+    "detection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "time_to_detect"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "internal-monitoring", "user-complaint", "employee-report", "audit-review",
+            "financial-reconciliation", "third-party-report", "incidental"
+          ],
+          "description": "How the failure was first noticed."
+        },
+        "time_to_detect": {
+          "type": "string",
+          "enum": ["minutes", "hours", "days", "weeks", "months", "unknown"],
+          "description": "Elapsed time from first harmful action to detection."
+        }
+      }
+    },
+    "lessons_learned": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 5,
+      "items": {"type": "string", "minLength": 20, "maxLength": 300},
+      "description": "Two to five lessons, each a concrete change an organization could make."
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"seed": {"const": true}}, "required": ["seed"]},
+      "then": {"properties": {"provenance": {"const": "composite-illustration"}}}
+    },
+    {
+      "if": {"properties": {"seed": {"const": false}}, "required": ["seed"]},
+      "then": {"properties": {"provenance": {"enum": ["first-hand-participant", "public-reporting-reconstruction", "contributor-composite"]}}}
+    }
+  ]
+}

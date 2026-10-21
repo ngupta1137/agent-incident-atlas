@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-017",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Prompt edit to shorten policy summaries drops exclusion clauses",
+  "date": "2026-04",
+  "sector": "insurance",
+  "agent_type": "document-processing-agent",
+  "autonomy_level": "act-with-review",
+  "failure_types": [
+    "unevaluated-change-release"
+  ],
+  "primary_failure_type": "unevaluated-change-release",
+  "narrative": "An insurer used an agent to summarize commercial policy documents for underwriters. A business analyst on the underwriting team had edit access to the agent's prompt. To make the summaries shorter, the analyst added an instruction to keep each summary to ten lines and omit boilerplate. The change went live the same afternoon. The team kept a regression set of 50 policy documents, but running it was a manual step owned by engineering, and no one asked for it. The shorter prompt led the agent to treat exclusion clauses as boilerplate in about a third of policies. Underwriters read the summaries and relied on them. Over three weeks, several quotes were issued on the assumption that a particular exclusion did not apply. A senior underwriter noticed the gap while comparing a summary with its source for an unrelated reason. The insurer withdrew the prompt change and reviewed 120 quotes issued in that period. Several required correction with the customers affected. The prompt lived in a configuration system that did not follow the release process used for code. That made an edit that changed what underwriters saw look like a minor settings change.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "financial",
+      "customer",
+      "regulatory"
+    ],
+    "description": "120 quotes were reviewed, several needed correction, and some carried coverage assumptions the insurer had not intended."
+  },
+  "root_cause": "A prompt change reached production without running the regression set, because prompt edits were outside the release process.",
+  "governance_gap": {
+    "control_category": "evaluation-and-testing",
+    "missing_control": "Automated evaluation gate that must pass before any prompt or configuration change reaches production",
+    "description": "The evaluation set existed but was a manual step with no owner at the point of change. Prompts were treated as settings, not as releases."
+  },
+  "detection": {
+    "method": "employee-report",
+    "time_to_detect": "weeks"
+  },
+  "lessons_learned": [
+    "Put prompts, retrieval sources, and model versions under the same release gate as code.",
+    "Run the regression set automatically on every change, and block release on failure.",
+    "Include cases for the content that matters most, such as exclusions, in every evaluation set."
+  ]
+}

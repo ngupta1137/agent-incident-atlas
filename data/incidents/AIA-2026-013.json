@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-013",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Support agent quotes another customer's integration details from a shared ticket index",
+  "date": {
+    "start": "2026-05",
+    "end": "2026-06"
+  },
+  "sector": "technology",
+  "agent_type": "support-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "cross-context-data-leakage"
+  ],
+  "primary_failure_type": "cross-context-data-leakage",
+  "narrative": "A business software company launched a support agent that answered customer questions using a retrieval index of past support tickets and internal runbooks. To improve answer quality, the team indexed tickets from all customers into one store. They relied on the agent's instructions, which said never to mention other customers, to keep tenants apart. The index had no tenant filter at query time. One customer asked about a recurring integration error. The agent found a closely matching ticket from a different customer and included details from it in its answer. These included the other customer's integration endpoint names and a contract renewal date that had been mentioned in the thread. The customer who received the answer recognized the other company's name and reported it. A review of the preceding month found 17 answers that contained fragments from other tenants. Confidentiality terms in customer contracts required notification, and the company contacted every affected customer. The retrieval layer returned whatever matched best, regardless of owner. The only barrier between tenants was a sentence in the prompt, which the model followed most of the time and not all of the time.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "data-exposure",
+      "regulatory",
+      "reputational"
+    ],
+    "description": "17 answers exposed fragments of other customers' data, requiring contractual notifications to affected customers."
+  },
+  "root_cause": "Tickets from all tenants were stored in one index without tenant filtering, and separation depended on a prompt instruction.",
+  "governance_gap": {
+    "control_category": "authorization",
+    "missing_control": "Tenant-scoped filtering enforced in the retrieval layer, using the authenticated customer identity",
+    "description": "Data separation was treated as a behavior of the model, not a property of the data store, so no technical enforcement was designed."
+  },
+  "detection": {
+    "method": "user-complaint",
+    "time_to_detect": "weeks"
+  },
+  "lessons_learned": [
+    "Enforce tenant boundaries in the retrieval or storage layer and never in the prompt.",
+    "Test retrieval with cross-tenant probes before launch and after each index change.",
+    "Log which documents were retrieved for each answer so leaks can be scoped quickly."
+  ]
+}

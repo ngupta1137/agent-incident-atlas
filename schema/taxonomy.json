@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "lenses": {
+    "authorize": "What is the system permitted to do, and who approved it?",
+    "prove": "What evidence says the system, its inputs, and its vendors deserve that authority?",
+    "revoke": "How is authority taken back, stopped, or undone?"
+  },
+  "failure_types": [
+    {"code": "FT-01", "tag": "over-authorized-tool-use", "name": "Over-authorized tool use", "lens": "authorize"},
+    {"code": "FT-02", "tag": "missing-hitl-gate", "name": "Missing human-in-the-loop gate", "lens": "authorize"},
+    {"code": "FT-03", "tag": "unrevoked-access-after-role-change", "name": "Un-revoked access after role change", "lens": "revoke"},
+    {"code": "FT-04", "tag": "prompt-injection-scope-escape", "name": "Prompt-injection scope escape", "lens": "authorize"},
+    {"code": "FT-05", "tag": "stale-data-action", "name": "Stale-data action", "lens": "prove"},
+    {"code": "FT-06", "tag": "unchecked-vendor-action", "name": "Unchecked vendor action", "lens": "prove"},
+    {"code": "FT-07", "tag": "missing-stop-criteria", "name": "Missing stop criteria", "lens": "revoke"},
+    {"code": "FT-08", "tag": "cost-latency-blowout", "name": "Cost or latency blowout", "lens": "authorize"},
+    {"code": "FT-09", "tag": "unvalidated-output-propagation", "name": "Unvalidated output propagation", "lens": "prove"},
+    {"code": "FT-10", "tag": "cross-context-data-leakage", "name": "Cross-context data leakage", "lens": "authorize"},
+    {"code": "FT-11", "tag": "missing-audit-trail", "name": "Missing audit trail", "lens": "prove"},
+    {"code": "FT-12", "tag": "irreversible-action-no-rollback", "name": "Irreversible action with no rollback", "lens": "revoke"},
+    {"code": "FT-13", "tag": "missing-kill-switch", "name": "Missing kill switch", "lens": "revoke"},
+    {"code": "FT-14", "tag": "unevaluated-change-release", "name": "Unevaluated change release", "lens": "prove"}
+  ]
+}

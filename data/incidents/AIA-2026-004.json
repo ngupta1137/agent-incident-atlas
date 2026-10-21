@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-004",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Claims messaging agent exposes investigation flags after a pilot ends",
+  "date": "2025-08",
+  "sector": "insurance",
+  "agent_type": "support-agent",
+  "autonomy_level": "act-with-review",
+  "failure_types": [
+    "unrevoked-access-after-role-change",
+    "unevaluated-change-release"
+  ],
+  "primary_failure_type": "unrevoked-access-after-role-change",
+  "narrative": "An insurer used an agent to draft claim status messages that adjusters reviewed and sent to policyholders. During a six week fraud analytics pilot, the agent's role was extended to read flags from the special investigations unit case system so it could route suspicious claims faster. The pilot ended and the project team moved on. The extended role stayed, because it had been granted as a temporary exception with no expiry date, and the ticket was closed on delivery instead of on revocation. Four months later, a product owner updated the message template to include any known claim status flags in the name of transparency. The change was tested on ordinary claims, none of which carried investigation flags. The agent began adding phrases such as \"your claim is under additional review\" to messages for policyholders whose claims carried a flag. Adjusters sent a number of these without noticing, because the flagged wording looked like routine status language. Several customers complained that they were being accused of fraud, and one complaint reached the state insurance regulator. The insurer withdrew the template, sent corrections, and spent several weeks reviewing every message sent since the template change. The investigation flags were never meant to be visible outside the investigations unit.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "customer",
+      "regulatory",
+      "reputational"
+    ],
+    "description": "Messages sent to customers hinting at fraud investigations, one regulator complaint, and a multi-week review of sent messages."
+  },
+  "root_cause": "A temporary permission granted for a pilot was never removed, and a later template change used it without a test that covered flagged claims.",
+  "governance_gap": {
+    "control_category": "identity-and-access",
+    "missing_control": "Expiry date on every temporary elevation, with revocation required to close the ticket",
+    "description": "The grant was logged as an exception without an end date, and closure criteria measured delivery, not cleanup."
+  },
+  "detection": {
+    "method": "user-complaint",
+    "time_to_detect": "weeks"
+  },
+  "lessons_learned": [
+    "Give every temporary elevation an expiry and make revocation part of the ticket's definition of done.",
+    "Run template and prompt changes against test cases that include the sensitive data the agent can reach.",
+    "Review what an agent can read, not only what it is asked to write."
+  ]
+}

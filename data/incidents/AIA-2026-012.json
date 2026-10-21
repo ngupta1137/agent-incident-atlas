@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-012",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Date format swap in extracted certificates clears lots with expired supplier certificates",
+  "date": "2026-04",
+  "sector": "manufacturing",
+  "agent_type": "document-processing-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "unvalidated-output-propagation"
+  ],
+  "primary_failure_type": "unvalidated-output-propagation",
+  "narrative": "A manufacturer used a two-stage agent pipeline to check supplier quality certificates. An extraction agent read certificate PDFs and wrote fields into a table, including expiry dates. A compliance agent then marked a lot as cleared for production when all of its certificates were valid. One supplier in another region wrote dates as day, month, year. In about a fifth of that supplier's certificates, where both readings were possible, the extraction agent returned month and day swapped. A certificate that expired on 4 March was read as expiring on 3 April. Dates where the day exceeded twelve were read correctly, so the errors looked random and no one saw a pattern. The compliance agent trusted the table. No check between the stages tested whether dates were plausible, whether the format was consistent for a supplier, or how confident the extraction was. Over six weeks the pipeline cleared 140 lots with certificates that had already expired. An external customer audit found the pattern when it sampled two lots and compared them with the source documents. Production had already used material from 31 of the lots. The manufacturer placed a quality hold, re-inspected the material, and reviewed shipped product.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "operational",
+      "regulatory",
+      "customer"
+    ],
+    "description": "140 lots cleared on expired certificates, 31 used in production, followed by holds, re-inspection, and a customer audit finding."
+  },
+  "root_cause": "The compliance agent accepted extraction output without checking format consistency, plausibility, or confidence.",
+  "governance_gap": {
+    "control_category": "data-quality",
+    "missing_control": "Validation at the handoff between agents covering date format, plausibility, and extraction confidence, with low-confidence items routed to a person",
+    "description": "Each stage was tested on its own. The interface between them had no owner and no acceptance checks."
+  },
+  "detection": {
+    "method": "third-party-report",
+    "time_to_detect": "weeks"
+  },
+  "lessons_learned": [
+    "Treat the handoff between agents as an interface with its own validation rules and an owner.",
+    "Compare extracted values with a source of truth on a sample basis, by supplier and document type.",
+    "Route ambiguous values, such as dates that read either way, to human review."
+  ]
+}

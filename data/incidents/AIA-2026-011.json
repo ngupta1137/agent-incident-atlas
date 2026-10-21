@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-011",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Open-ended research task consumes a quarter of LLM budget in three days",
+  "date": {
+    "start": "2026-03",
+    "end": "2026-03"
+  },
+  "sector": "professional-services",
+  "agent_type": "research-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "cost-latency-blowout",
+    "missing-stop-criteria"
+  ],
+  "primary_failure_type": "cost-latency-blowout",
+  "narrative": "A professional services firm gave a research agent a broad task in a pilot: map every regulatory change relevant to its clients in 14 jurisdictions and keep digging until coverage is complete. The agent ran on the highest tier model with a large context window. It retrieved full documents instead of summaries and launched sub-searches for each jurisdiction and topic, then reran them when it judged coverage thin. The task was scheduled to repeat each night. No cap on tokens or tool calls existed for a single run, and the pilot team had not set a budget alert at the organization level. Over three days the agent consumed roughly fourteen times the monthly estimate for the whole pilot. The provider emailed a usage warning to a shared mailbox that nobody monitored. The finance team found the problem only when the usage dashboard crossed a billing threshold. The output was of limited value. A large share of the retrieved material was duplicated across jurisdictions, and the final report had no clear ranking of what mattered. Nobody had defined what complete meant, so the agent had no way to conclude that it was done. The firm paused the pilot, negotiated a partial credit with the provider, and added per-run limits.",
+  "business_impact": {
+    "severity": "moderate",
+    "categories": [
+      "financial"
+    ],
+    "description": "LLM spend of about fourteen times the monthly pilot estimate in three days, with little usable output."
+  },
+  "root_cause": "The task had no definition of done, runs had no token or call limits, and usage alerts went to an unmonitored mailbox.",
+  "governance_gap": {
+    "control_category": "budgeting-and-limits",
+    "missing_control": "Per-run and per-project spend ceilings that halt the agent, with alerts routed to a named owner",
+    "description": "The pilot was approved on the quality of its demo. No one assigned a budget owner or set resource limits before it ran on a schedule."
+  },
+  "detection": {
+    "method": "financial-reconciliation",
+    "time_to_detect": "days"
+  },
+  "lessons_learned": [
+    "Set token, tool call, and time ceilings per run, and a spend ceiling per project that stops the agent.",
+    "Define what done means for any open-ended task before scheduling it.",
+    "Send usage alerts to a named person, not a shared mailbox."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-010",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Remediation agent restarts a service 400 times and floods the incident channel",
+  "date": "2026-02",
+  "sector": "energy-utilities",
+  "agent_type": "it-operations-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "missing-stop-criteria",
+    "missing-kill-switch"
+  ],
+  "primary_failure_type": "missing-stop-criteria",
+  "narrative": "An energy utility's IT team deployed a remediation agent that responded to monitoring alerts on its meter data platform. It restarted services, cleared queues, and reran failed batch jobs. A storage fault on a downstream database caused an ingestion alert that no restart could fix. The agent saw the alert, restarted the ingestion service, and checked the alert again. It found the alert still firing and did the same thing. It repeated this about 400 times over five hours. Each cycle opened a new incident ticket and paged the on-call rotation, so the real incident was buried in duplicates. Each restart also reloaded a large reference dataset, which added load to a database that was already struggling. On-call engineers saw the stream of tickets and assumed the automation was handling the problem. When the lead realized it was not, she had to find the platform owner to learn how to turn the agent off, and that took another hour. The agent had no cap on attempts for a single alert, no rule to escalate after two failures, and no condition under which it would stop and hand over. There was also no pause control that operations staff could use without help from the platform team.",
+  "business_impact": {
+    "severity": "moderate",
+    "categories": [
+      "operational"
+    ],
+    "description": "A data ingestion outage lasted about five hours longer than needed, and the incident channel was unusable during that time."
+  },
+  "root_cause": "The agent had no attempt limit or escalation rule for repeated failure, and operations staff could not pause it without the platform owner.",
+  "governance_gap": {
+    "control_category": "containment",
+    "missing_control": "Maximum attempts per alert with mandatory escalation to a human, plus a pause control for the on-call lead",
+    "description": "Remediation logic was written around success cases. No one specified what the agent should do when its fix did not work."
+  },
+  "detection": {
+    "method": "internal-monitoring",
+    "time_to_detect": "hours"
+  },
+  "lessons_learned": [
+    "Define for every automated remediation a maximum number of attempts and a handoff step.",
+    "Give the on-call lead a documented way to pause any agent in one step.",
+    "Rate-limit ticket and page creation from automation so it cannot swamp human responders."
+  ]
+}

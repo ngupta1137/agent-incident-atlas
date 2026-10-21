@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this dataset or taxonomy, please cite it using the metadata below."
+type: dataset
+title: "Agent Incident Atlas"
+version: 0.1.0
+date-released: 2026-10-21
+abstract: >-
+  An open dataset and failure taxonomy for anonymized agentic AI incidents,
+  organized for research and AI governance postmortems in enterprise AI.
+  Version 0.1.0 contains 20 illustrative seed records and no real incidents.
+authors:
+  - family-names: Gupta
+    given-names: Nitin
+    # orcid: "https://orcid.org/0000-0000-0000-0000"   # add your ORCID iD here
+license:
+  - CC-BY-4.0
+  - MIT
+keywords:
+  - agentic AI
+  - AI governance
+  - enterprise AI
+  - AI safety
+  - incident database
+  - failure taxonomy
+  - postmortem
+repository-code: "https://github.com/OWNER/agent-incident-atlas"
+url: "https://github.com/OWNER/agent-incident-atlas"
+# doi: "10.5281/zenodo.XXXXXXX"   # add the Zenodo concept DOI after the first release, see RELEASING.md

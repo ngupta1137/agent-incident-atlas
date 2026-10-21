@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.0",
+  "id": "AIA-2026-002",
+  "seed": true,
+  "provenance": "composite-illustration",
+  "title": "Payables agent changes supplier bank details on an emailed request",
+  "date": "2025-05",
+  "sector": "financial-services",
+  "agent_type": "finance-ops-agent",
+  "autonomy_level": "act-autonomously",
+  "failure_types": [
+    "missing-hitl-gate",
+    "irreversible-action-no-rollback"
+  ],
+  "primary_failure_type": "missing-hitl-gate",
+  "narrative": "A regional financial services firm used an accounts payable agent to read vendor emails, update vendor records, and queue payments for the weekly run. The agent could change a vendor's bank details when a request came from an address on the vendor's registered domain. A fraudster registered a lookalike domain close enough that the agent's similarity check passed, and sent a bank detail change for a mid-sized supplier. The agent updated the record and logged the change as routine. The next weekly payment run sent one invoice payment, in the low six figures, to the new account. The real supplier phoned nine days later to ask about the missing payment. The firm's written procedure required a callback to a known phone number for any bank detail change, but that step lived in the manual process and was never built into the agent's workflow. When the agent was introduced, the team assumed the procedure still applied. The agent did not know about it, and no one was assigned to apply it on the agent's behalf. The banks recalled part of the funds. The agent did exactly what its configuration allowed. No one had listed changes to payment destination as a high-risk action class that needed a person to approve before the record changed.",
+  "business_impact": {
+    "severity": "high",
+    "categories": [
+      "financial"
+    ],
+    "description": "A payment in the low six figures went to a fraudulent account. Part of it was recovered through a bank recall."
+  },
+  "root_cause": "A control that existed in the human procedure, callback verification, was not carried into the agent's workflow, and the agent could change payment destinations on its own.",
+  "governance_gap": {
+    "control_category": "approval",
+    "missing_control": "Mandatory out-of-band human verification before any change to a payment destination",
+    "description": "The control was designed for people, never built for the agent, and nobody owned the task of mapping existing procedures onto the automated path."
+  },
+  "detection": {
+    "method": "third-party-report",
+    "time_to_detect": "days"
+  },
+  "lessons_learned": [
+    "Map every manual control in a process to the agent's path before go-live, and record which ones were not carried over.",
+    "Classify actions by consequence. Changes to payment destination, credentials, or contract terms always need a named human approver.",
+    "Run payment release behind a hold window so a late callback can still stop it."
+  ]
+}
